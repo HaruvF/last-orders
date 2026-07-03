@@ -1,0 +1,54 @@
+{
+  "general": [
+    "Welcome to Last Orders. The floor's sticky, the ale's flat, and I've seen better crowds at a funeral.",
+    "You break it, you bought it. You bought it, I keep it anyway.",
+    "The dartboard's crooked, the beams are rotten, and so am I. Drink up.",
+    "I've watered down the ale, but don't worry — the water's also ale.",
+    "We don't do cocktails. We do consequences.",
+    "That stool's reserved for the ghost of the last smart-mouth. Sit careful.",
+    "You lot look like a quest gone wrong.",
+    "House rule: no prophecies at the bar. Last one caused a stampede.",
+    "The soup of the day is ale. The soup of every day is ale.",
+    "If the neon sign flickers, that's not an omen. Probably.",
+    "I've thrown out kings, dragons, and one very persistent mime. Don't test me.",
+    "Tips go in the jar. Complaints go in the cellar. Nobody comes back from the cellar.",
+    "Enjoy yourselves. It unsettles me, but enjoy yourselves."
+  ],
+  "roundStart": [
+    "Right, listen up you lot, and pretend you have brains.",
+    "Next round's starting. Try not to embarrass your ancestors.",
+    "Sharpen up. This one separates the patrons from the puddles.",
+    "Places, everyone. And by places I mean sit down and shut it.",
+    "Another round, another chance to disappoint me personally.",
+    "Eyes front. The quicker you play, the quicker I can close."
+  ],
+  "playerDid": [
+    "Bold move. Stupid, but bold.",
+    "I've seen drunker people answer faster.",
+    "Somewhere, a village is missing its genius. Not here though.",
+    "That answer's going on the wall of shame, right next to the dart hole.",
+    "Not bad. For someone drinking on credit.",
+    "The pub cat could've done better, and the pub cat is dead."
+  ],
+  "scores": [
+    "Here's the Bar Tab. Settle up in points or shame — your choice.",
+    "The chalkboard doesn't lie. Unlike most of you.",
+    "Look at those scores. My condolences to the bottom half.",
+    "Winners drink free. We don't have winners here, so pay up.",
+    "The leaderboard's been updated. The cellar's been unlocked. Motivation, that is.",
+    "Half of you owe me money. All of you owe me an apology."
+  ],
+  "death": [
+    "Another one for the cellar. Mind the stairs — not that it matters now.",
+    "Dead? At MY bar? Rude.",
+    "We lost one. Round of silence. ...Right, that's enough.",
+    "They died as they lived: getting easy questions wrong.",
+    "Don't worry, ghosts drink half price."
+  ],
+  "victory": [
+    "A winner. In THIS pub. The neon sign just flickered in disbelief.",
+    "Congratulations. Your prize is telling everyone about it forever.",
+    "Champion of Last Orders. That and two coppers gets you a flat ale.",
+    "You've won. Now get out — LAST ORDERS!"
+  ]
+}

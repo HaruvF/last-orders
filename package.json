@@ -1,0 +1,17 @@
+{
+  "name": "last-orders",
+  "version": "1.0.0",
+  "description": "Jackbox-style party game set in a grungy fantasy pub. Host on a TV, join on phones.",
+  "main": "server/index.js",
+  "scripts": {
+    "start": "node server/index.js",
+    "sim": "node test/sim.js"
+  },
+  "dependencies": {
+    "express": "^4.19.2",
+    "socket.io": "^4.7.5"
+  },
+  "devDependencies": {
+    "socket.io-client": "^4.7.5"
+  }
+}

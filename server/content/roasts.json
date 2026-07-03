@@ -1,0 +1,141 @@
+{
+  "join": [
+    "Look what the cat dragged in — {p}. And I thought the rats were bad this year.",
+    "{p}'s here! Lock up your grandmothers.",
+    "Welcome, {p}. The last person who sat on that stool is still being treated for something.",
+    "Oi, {p}! I've seen better-looking things floating in the cellar.",
+    "{p} has entered the pub. Somewhere, a village is celebrating.",
+    "Ah, {p}. I'd say make yourself at home, but I've seen your home.",
+    "{p}, welcome! Your tab from last time is framed behind the bar as a warning to others.",
+    "Everyone say hello to {p}, who I'm legally required to serve.",
+    "{p}! Still wearing that face, I see. Brave.",
+    "Give it up for {p} — proof that the door policy means nothing."
+  ],
+  "roundStart": [
+    "Right, next round. Try to embarrass yourselves quietly.",
+    "Sharpen up, you lot. This round separates the patrons from the puddles.",
+    "New round! Same disappointing crowd.",
+    "Let's go again. And remember — I'm not laughing WITH you.",
+    "Round's starting. Pretend you've got brains and we'll all get through this.",
+    "Next round! Loser buys a round. Winner also buys a round. It's a pub."
+  ],
+  "fooled": [
+    "{p} lies so smoothly they should be in politics. Or married to me.",
+    "Ooooh, {p} fooled half the room! Lying comes natural when you look like that.",
+    "{p}, you beautiful snake. That lie was filthier than my mop water.",
+    "Half the pub swallowed {p}'s nonsense whole. Story of {p}'s weekends, really.",
+    "{p} just fooled the lot of you. And you all drove here. Terrifying.",
+    "That lie by {p} was so dirty I need to wash the chalkboard.",
+    "{p} fibs like a pro. The barmaid says that tracks."
+  ],
+  "nobodyTruth": [
+    "NOBODY found the truth. I've served smarter bar stools.",
+    "The truth was right there and you all walked past it like it owed you money.",
+    "Not one of you picked the truth. Natural selection is taking notes.",
+    "Zero for the truth. Your teachers are drinking somewhere, quietly weeping.",
+    "The truth stood alone tonight. Much like {p} at last year's Yule feast."
+  ],
+  "death": [
+    "{p} is dead! Their tab, tragically, lives on.",
+    "Bury {p} out back with the others. Mind the smell.",
+    "{p} has died as they lived — confidently wrong.",
+    "A moment of silence for {p}... that's plenty. NEXT!",
+    "{p}'s dead. On the bright side, ghosts drink half price.",
+    "Farewell, {p}. The stool's already more useful without you.",
+    "{p} just perished. The cellar's getting crowded and frankly, chatty.",
+    "Dead! {p}, you had ONE job: not dying. Incredible stuff."
+  ],
+  "escape": [
+    "{p} ESCAPED! First time {p}'s left a pub upright, I'd wager.",
+    "{p} kicked the door down and ran! Didn't pay, obviously.",
+    "{p} escapes the cellar! The landlord is furious and slightly impressed.",
+    "And {p} sprints into the night — the fastest they've moved since last call.",
+    "{p} is free! Somewhere a barkeep weeps over an unpaid tab."
+  ],
+  "brawlWin": [
+    "{p} wins the brawl! The other one wears the pint. Tradition.",
+    "Point to {p}! That answer was sharper than the darts and twice as dangerous.",
+    "{p} takes it! The loser gets a complimentary shower. Ale-flavored.",
+    "The crowd's spoken — {p} wins. The crowd is drunk, but it counts.",
+    "{p} wins that scrap. Mop's in the corner for the loser.",
+    "Victory for {p}! Filthy answer. I'm putting it on the specials board."
+  ],
+  "knockout": [
+    "KNOCKOUT! {p} hits harder than the house whiskey!",
+    "UNANIMOUS! {p} just ended somebody's whole bloodline!",
+    "That's a KNOCKOUT for {p}! Someone check the loser for a pulse and a tab.",
+    "Total demolition by {p}! I felt that from behind the bar.",
+    "KNOCKOUT! {p}, that was crueler than my prices."
+  ],
+  "silence": [
+    "{p} wrote... NOTHING. The silence speaks volumes, and it says 'coward'.",
+    "{p} froze up completely. Happens to {p} a lot, I hear.",
+    "No answer from {p}! Bold strategy. Stupid, but bold.",
+    "{p} said nothing at all. First wise decision {p}'s made tonight.",
+    "An empty answer from {p}. Much like the promises {p} makes at closing time."
+  ],
+  "gutter": [
+    "{p} found the gutter! Just like every Friday night, eh {p}?",
+    "Straight into the gutter, {p}. At least you're consistent.",
+    "{p}'s dart hit the gutter. The gutter is considering a restraining order.",
+    "GUTTER! {p}, the dartboard has feelings and none of them are respect.",
+    "{p} lands in the gutter. Home turf advantage, I suppose.",
+    "Oof, {p}, the gutter! You've slept in worse though, haven't you?",
+    "The gutter claims {p}. The gutter always claims {p}."
+  ],
+  "bullseye": [
+    "BULLSEYE-adjacent! {p} was closest! Even a blind squirrel, as they say.",
+    "{p} nails it! Suspiciously accurate for someone on their fifth pint.",
+    "Closest dart goes to {p}! Somewhere, {p}'s old teachers faint in disbelief.",
+    "{p} takes the round! Precision like that could get you banned from the raffle.",
+    "Sharp throw, {p}! If only your life choices had the same aim."
+  ],
+  "scores": [
+    "And dead last... {p}. Even the stool you're sitting on is embarrassed.",
+    "{p}'s at the bottom of the tab. The bar has seen worse, but not recently.",
+    "Bottom of the board: {p}. Your ancestors watched that. All of them.",
+    "{p} is losing spectacularly. Drinks are NOT on the house, but shame is.",
+    "Last place: {p}. I'd offer words of comfort but I only stock insults.",
+    "{p} props up the leaderboard like a human coaster. Useful, in a way.",
+    "Cheer up, {p}. Rock bottom has a lovely view of everyone else's arse."
+  ],
+  "victory": [
+    "ALL HAIL {p}, CHAMPION OF LAST ORDERS! Tonight you drink free. Everything else about you remains deeply mediocre.",
+    "{p} WINS! Someone fetch the crown. It's a traffic cone, but it's OUR traffic cone.",
+    "Champion {p}! Kiss the trophy. Do NOT ask where the trophy has been.",
+    "{p} takes the whole night! The rest of you, settle your tabs and your grudges.",
+    "Victory for {p}! Sing it from the rooftops — quietly though, the neighbors have crossbows.",
+    "{p} is champion! A legend is born. A very smug, very punchable legend."
+  ],
+  "justice": [
+    "{p} has earned PUB JUSTICE! Power corrupts, and {p} was already corrupt. This'll be good.",
+    "Uh oh — {p}'s got a punishment to hand out. Hide your pints and your dignity.",
+    "PUB JUSTICE for {p}! Absolute power, meet absolutely nobody qualified to hold it.",
+    "{p} holds the power of punishment! I haven't seen {p} this excited since the free peanuts.",
+    "The pub grants {p} JUSTICE! May the gods have mercy, because {p} won't."
+  ],
+  "drench": [
+    "{q} just DRENCHED {p}! Smell that? That's humility, with hoppy notes.",
+    "SPLASH! {p} wears a pint, courtesy of {q}. It's an improvement, honestly.",
+    "{q} baptized {p} in house ale! Welcome to the church of shame, {p}.",
+    "{p} got drenched by {q}! Good news, {p}: that shirt needed retiring anyway.",
+    "A pint to the face of {p}, from {q}, with love. And malice. Mostly malice.",
+    "{q} soaks {p}! In this pub, that's practically a marriage proposal."
+  ],
+  "intro_talltales": [
+    "TALL TALES! Write your filthiest lies and pray your mates are as gullible as they look.",
+    "Time for TALL TALES. Lie to your friends. You do it anyway — tonight it scores points."
+  ],
+  "intro_murder": [
+    "TRIVIA MURDER PUB! Answer wrong and you're cellar meat. I've always wanted to say that.",
+    "Welcome to the cellar, meat. Answer right or die trying. Ghosts still pay full price."
+  ],
+  "intro_brawl": [
+    "BAR BRAWL! Two enter, one gets a pint facial. Make your insults count.",
+    "It's BRAWL time! Fight dirty, vote dirtier. The mop is ready."
+  ],
+  "intro_darts": [
+    "DARTS OF DESTINY! Throw your guess, dodge the gutter, and bet on whoever looks least drunk.",
+    "Darts up! Closest wins, gutter losers buy the round. House always wins, obviously."
+  ]
+}

@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LAST ORDERS — Big Screen</title>
+<link rel="stylesheet" href="/shared.css">
+<link rel="stylesheet" href="/host/host.css">
+</head>
+<body>
+  <div id="ambient"></div>
+  <div id="vignette"></div>
+  <div id="toasts"></div>
+  <div id="frame">
+    <header id="topbar">
+      <div id="sign" class="neon">🍺 LAST ORDERS</div>
+      <div id="roomcode" class="poster tilt-r"></div>
+      <button id="voicebtn" class="btn" title="Toggle the MC's voice">🗣️</button>
+      <div id="timer" class="timerbox" style="visibility:hidden">–</div>
+    </header>
+    <main id="stage"></main>
+    <footer id="barfoot">
+      <div id="barkeep"></div>
+      <div id="bubble" class="poster tilt-l marker"></div>
+      <div id="playersbar"></div>
+    </footer>
+  </div>
+  <div id="tapstart">
+    <div class="poster wanted" style="max-width:520px">
+      <h1 style="margin:8px 0">LAST ORDERS</h1>
+      <p class="marker" style="font-size:1.3rem">A pub full of liars, ghosts and darts.</p>
+      <button class="btn brew" id="openpub" style="font-size:1.6rem">OPEN THE PUB</button>
+    </div>
+  </div>
+  <script src="/socket.io/socket.io.js"></script>
+  <script src="/avatars.js"></script>
+  <script src="/audio.js"></script>
+  <script src="/host/host.js"></script>
+</body>
+</html>
