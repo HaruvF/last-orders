@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LAST ORDERS</title>
+<link rel="stylesheet" href="/shared.css">
+<style>
+  html, body { height: 100%; }
+  #land {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+  }
+  .landcard { max-width: 560px; width: 100%; text-align: center; }
+  .landcard h1 { font-size: clamp(2.2rem, 9vw, 4rem); margin: 6px 0; }
+  .landcard p { font-size: 1.2rem; }
+  .landbtns { display: flex; flex-direction: column; gap: 16px; margin-top: 24px; }
+  .landbtns a { text-decoration: none; }
+  .landbtns .btn { width: 100%; font-size: 1.4rem; padding: 20px; display: block; }
+  .hint { font-size: 0.95rem; opacity: 0.85; margin-top: 8px; }
+</style>
+</head>
+<body>
+  <div id="land">
+    <div class="poster wanted landcard tilt-l">
+      <div class="neon" style="font-size:1.4rem">🍺</div>
+      <h1>LAST ORDERS</h1>
+      <p class="marker" style="color:var(--ink)">A pub full of liars, ghosts and darts.</p>
+      <div class="landbtns">
+        <a href="/host"><span class="btn brew">📺 BIG SCREEN — start a room</span></a>
+        <a href="/play"><span class="btn">📱 JOIN ON YOUR PHONE</span></a>
+      </div>
+      <p class="hint marker" style="color:var(--ink)">Open the big screen on a TV/laptop, then everyone joins with their phones using the room code.</p>
+    </div>
+  </div>
+</body>
+</html>
