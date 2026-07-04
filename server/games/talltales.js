@@ -21,7 +21,6 @@ class TallTales extends GameBase {
 
   start() {
     this.phase = 'intro';
-    this.room.bartender('roundStart');
     this.room.setTimer(secs(6), () => this.startRound());
     this.room.sync();
   }
@@ -87,9 +86,6 @@ class TallTales extends GameBase {
     const step = this.revealSteps[this.revealIndex];
     this.room.sfx(step.isTruth ? 'foam' : 'stamp');
     if (step.isTruth) this.room.fx('shake');
-    // MC commentary on the juicy reveals
-    if (!step.isTruth && step.pickedBy.length >= 2) this.room.roast('fooled', step.author);
-    else if (step.isTruth && step.pickedBy.length === 0) this.room.roast('nobodyTruth', this.players[0] && this.players[0].name);
     this.room.setTimer(secs(step.isTruth ? 5 : 4), () => this.nextRevealStep());
     this.room.sync();
   }
@@ -101,7 +97,6 @@ class TallTales extends GameBase {
     for (const step of this.revealSteps) {
       if (!step.isTruth && step.author && step.pickedBy.length >= 2) this.room.awardPunish(step.author);
     }
-    this.room.bartender('playerDid');
     this.room.sfx('stinger');
     this.room.setTimer(secs(7), () => {
       this.round++;

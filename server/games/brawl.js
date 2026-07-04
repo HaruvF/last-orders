@@ -27,7 +27,6 @@ class BarBrawl extends GameBase {
 
   start() {
     this.phase = 'intro';
-    this.room.bartender('roundStart');
     this.room.setTimer(secs(6), () => this.startWrite());
     this.room.sync();
   }
@@ -88,12 +87,6 @@ class BarBrawl extends GameBase {
     }
     this.room.sfx(m.result.ko ? 'death' : 'splash');
     this.room.fx(m.result.ko ? 'shake' : 'confetti');
-    this.room.bartender('playerDid');
-    // MC commentary: cowards first, then knockouts, then plain wins
-    const silent = [m.a, m.b].find(n => m.answers[n] === NO_ANSWER);
-    if (silent) this.room.roast('silence', silent);
-    else if (m.result.ko) this.room.roast('knockout', m.result.winner);
-    else if (m.result.winner) this.room.roast('brawlWin', m.result.winner);
     this.room.setTimer(secs(7), () => this.startNextMatch());
     this.room.sync();
   }

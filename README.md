@@ -24,13 +24,6 @@ fooling 2+ players with one lie (Tall Tales), scoring a Knockout (Bar Brawl), or
 darts (Darts of Destiny). Spend it to drench a player of your choice (−100 points)… or hit
 **🎲 RANDOM ROLL** and let fate pick the victim.
 
-**🗣️ The Landlord (AI voice host):** the bartender MC actually *speaks* — a gravelly voice
-(browser speech synthesis, no internet or API keys needed) that welcomes players by name with an
-insult, introduces each game, heckles deaths, knockouts, gutter darts and cowards who write
-nothing, roasts whoever's in last place at every Bar Tab, and crowns the champion with maximum
-disrespect. ~90 quirky, bawdy pub-roast lines in `server/content/roasts.json` — add your own!
-Toggle the voice with the 🗣️/🔇 button on the host screen. (Chrome and Edge have the best voices.)
-
 **Emoji heckling:** during voting rounds, reveals and scoreboards, an emoji bar appears on every
 phone (😂 🔥 💀 🍺 👏 🤮 😱 🖕). Tap one and it floats up the big screen with your name on it.
 Rate-limited so nobody can flood the pub.

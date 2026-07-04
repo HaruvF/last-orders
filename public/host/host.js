@@ -3,7 +3,6 @@
 
 const socket = io();
 const stage = document.getElementById('stage');
-const bubble = document.getElementById('bubble');
 const playersbar = document.getElementById('playersbar');
 const roomcodeEl = document.getElementById('roomcode');
 const timerEl = document.getElementById('timer');
@@ -55,60 +54,6 @@ document.getElementById('openpub').addEventListener('click', () => {
   PubAudio.unlock();
   PubAudio.play('bell');
   document.getElementById('tapstart').remove();
-  speak('Welcome to Last Orders! I will be your host, your judge, and your biggest disappointment.');
-});
-
-// ---------- MC voice (Web Speech API — no assets, no internet) ----------
-let voiceOn = localStorage.getItem('lo-voice') !== 'off';
-let mcVoice = null;
-function pickMcVoice() {
-  if (!('speechSynthesis' in window)) return;
-  const vs = speechSynthesis.getVoices();
-  mcVoice =
-    vs.find(v => /Google UK English Male/i.test(v.name)) ||
-    vs.find(v => /Daniel|George|Arthur|Ryan/i.test(v.name) && v.lang.startsWith('en')) ||
-    vs.find(v => v.lang === 'en-GB') ||
-    vs.find(v => v.lang && v.lang.startsWith('en')) || null;
-}
-if ('speechSynthesis' in window) {
-  pickMcVoice();
-  speechSynthesis.onvoiceschanged = pickMcVoice;
-}
-function speak(text) {
-  if (!voiceOn || !('speechSynthesis' in window)) return;
-  try {
-    // Don't let commentary back up — drop the backlog, keep the freshest line
-    if (speechSynthesis.pending) speechSynthesis.cancel();
-    const u = new SpeechSynthesisUtterance(text);
-    if (mcVoice) u.voice = mcVoice;
-    u.pitch = 0.75; // gravelly landlord
-    u.rate = 1.05;
-    u.volume = 1;
-    u.onstart = () => barkeepEl.classList.add('talking');
-    u.onend = () => barkeepEl.classList.remove('talking');
-    u.onerror = () => barkeepEl.classList.remove('talking');
-    speechSynthesis.speak(u);
-    // Safety net: never leave the mouth flapping if onend is missed
-    clearTimeout(speak._guard);
-    speak._guard = setTimeout(() => barkeepEl.classList.remove('talking'), Math.min(20000, 60 * text.length + 3000));
-  } catch (e) { /* voice is a garnish, never break the game for it */ }
-}
-const voiceBtn = document.getElementById('voicebtn');
-function renderVoiceBtn() { voiceBtn.textContent = voiceOn ? '🗣️' : '🔇'; }
-renderVoiceBtn();
-voiceBtn.addEventListener('click', () => {
-  voiceOn = !voiceOn;
-  localStorage.setItem('lo-voice', voiceOn ? 'on' : 'off');
-  if (!voiceOn && 'speechSynthesis' in window) speechSynthesis.cancel();
-  renderVoiceBtn();
-});
-
-socket.on('say', (d) => {
-  bubble.textContent = d.text; // the bartender's bubble mouths along
-  bubble.classList.remove('pop'); void bubble.offsetWidth;
-  bubble.classList.add('pop');
-  window.__lastSay = d.text;   // handy for debugging
-  speak(d.text);
 });
 
 // ---------- floating emoji reactions ----------
@@ -132,29 +77,6 @@ function escStr(s) {
   return d.innerHTML;
 }
 
-// Bartender character (original, comic style, animatable parts)
-document.getElementById('barkeep').innerHTML = `
-<svg width="110" height="110" viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
-  <ellipse cx="60" cy="112" rx="44" ry="8" fill="#0d0805"/>
-  <g class="bk-body">
-    <rect x="30" y="62" width="60" height="44" rx="8" fill="#5a3d2b" stroke="#1a120c" stroke-width="5"/>
-    <rect x="44" y="66" width="32" height="40" fill="#e9d9ae" stroke="#1a120c" stroke-width="4"/>
-    <g class="bk-head">
-      <circle cx="60" cy="40" r="24" fill="#e8bfa0" stroke="#1a120c" stroke-width="5"/>
-      <path d="M38 34 Q60 16 82 34 L82 28 Q60 10 38 28 Z" fill="#3d3d3d" stroke="#1a120c" stroke-width="4"/>
-      <circle cx="51" cy="40" r="3.5" fill="#1a120c"/><circle cx="69" cy="40" r="3.5" fill="#1a120c"/>
-      <path class="bk-brow" d="M46 36 L56 33" stroke="#1a120c" stroke-width="4" stroke-linecap="round"/>
-      <path class="bk-brow" d="M74 36 L64 33" stroke="#1a120c" stroke-width="4" stroke-linecap="round"/>
-      <ellipse class="bk-mouth" cx="60" cy="54" rx="10" ry="3" fill="#1a120c"/>
-      <path d="M40 58 Q60 70 80 58 L78 66 Q60 76 42 66 Z" fill="#8a6f4d" stroke="#1a120c" stroke-width="4"/>
-    </g>
-    <g class="bk-mug">
-      <rect x="88" y="70" width="14" height="20" rx="3" fill="#f5a623" stroke="#1a120c" stroke-width="4"/>
-      <rect x="88" y="66" width="14" height="6" fill="#fffbe8" stroke="#1a120c" stroke-width="3"/>
-    </g>
-  </g>
-</svg>`;
-const barkeepEl = document.getElementById('barkeep');
 
 socket.on('connect', () => {
   const reclaim = sessionStorage.getItem('lo-hostcode') || null;
@@ -173,9 +95,11 @@ setInterval(() => {
   timerEl.textContent = Math.ceil(left);
   const urgent = left > 0 && left <= 5;
   timerEl.classList.toggle('urgent', urgent);
-  if (urgent && Math.ceil(left) !== lastUrgentTick) {
-    lastUrgentTick = Math.ceil(left);
-    PubAudio.play('urgent');
+  // only chime the final 3 seconds, softly, once each
+  const secLeft = Math.ceil(left);
+  if (left > 0 && left <= 3 && secLeft !== lastUrgentTick) {
+    lastUrgentTick = secLeft;
+    PubAudio.play(secLeft === 1 ? 'urgentLast' : 'urgent');
   }
 }, 200);
 
@@ -187,11 +111,67 @@ function esc(s) {
 }
 function headRow(list, doneKey = 'done') {
   return `<div class="headrow">` + list.map(x =>
-    `<div class="hp ${x[doneKey] ? 'done' : 'notdone'}">${Avatars.render(x.avatar || avatarOf(x.name), 52)}<span class="tag">${esc(x.name)}${x[doneKey] ? ' ✔' : ''}</span></div>`
+    `<div class="hp ${x[doneKey] ? 'done' : 'notdone'}">${Avatars.render(x.avatar || avatarOf(x.name), 44)}<span class="tag">${esc(x.name)}${x[doneKey] ? ' ✔' : ''}</span></div>`
   ).join('') + '</div>';
 }
 let playerAvatars = {};
 function avatarOf(name) { return playerAvatars[name] || 'ghost'; }
+
+// ---------- per-question "instant photo" ----------
+// Real photo generation would need an image API (and internet/keys); instead every
+// question gets a themed comic emoji, chosen by keyword, framed like an evidence photo.
+const SNAP_KEYWORDS = [
+  [/mario|luigi|peach|bowser|goomba|mushroom kingdom/, '🍄'],
+  [/zelda|link|ganon|hyrule|triforce|ocarina/, '🗡️'],
+  [/pok[eé]mon|pikachu|pok[eé]dex|bulbasaur|charizard|mew/, '⚡'],
+  [/sonic|hedgehog|tails|sega|genesis|mega drive/, '🦔'],
+  [/tetris|falling block/, '🧱'],
+  [/pac-?man|namco/, '🟡'],
+  [/minecraft|creeper|steve|notch/, '🟩'],
+  [/donkey kong|\bkong\b/, '🦍'],
+  [/metroid|samus/, '🚀'],
+  [/kirby/, '🌸'],
+  [/star wars|jedi|sith|lightsaber|skywalker|millennium falcon/, '🌌'],
+  [/star trek|vulcan|picard|enterprise/, '🖖'],
+  [/lord of the rings|gandalf|hobbit|frodo|\bring\b|middle-earth/, '💍'],
+  [/dungeons|d&d|d20|dice|tabletop/, '🎲'],
+  [/chess/, '♟️'],
+  [/magic: the gathering|\bmana\b|planeswalker/, '🃏'],
+  [/guitar hero|rock band|rhythm/, '🎸'],
+  [/\bdart|dartboard|bullseye/, '🎯'],
+  [/doom|quake|wolfenstein|shooter|fps/, '🔫'],
+  [/death|kill|die\b|dies|murder|deadly|grave|reaper/, '💀'],
+  [/ghost|spirit|haunt|spectre/, '👻'],
+  [/dragon|drake/, '🐉'],
+  [/titan|attack on titan|giant/, '🗿'],
+  [/sword|knight|blade|samurai|katana/, '⚔️'],
+  [/demon|devil|chainsaw|curse|jujutsu/, '😈'],
+  [/vampire|dracula|blood/, '🧛'],
+  [/witch|wizard|alchemist|spell|mage|frieren/, '🪄'],
+  [/salmon|shark|\bfish|whale|octopus|shrimp|lobster|mermaid/, '🐟'],
+  [/\bcat\b|feline/, '🐱'],
+  [/\bdog\b|puppy|goose|duck|bird|flamingo|parrot|emu|chicken|pigeon/, '🐦'],
+  [/beer|\bale\b|pint|pub|guinness|oktoberfest|brew|tavern/, '🍺'],
+  [/pizza|cheese|banana|honey|ketchup|carrot|croissant|crisps|pringle|kit ?kat|hot ?dog|recipe|food|snack/, '🍕'],
+  [/coffee|webcam/, '☕'],
+  [/money|coin|wallet|price|income|fine|tab|sold|copies/, '💰'],
+  [/space|moon|astronaut|rocket|nasa|planet|galaxy/, '🪐'],
+  [/boxing|brawl|fight|fatalit|knockout|punch/, '🥊'],
+  [/heart|love|marriage|wedding|best friend/, '❤️'],
+  [/lightning|thunder|electric|volt/, '⚡'],
+  [/eiffel|tower|castle|wall|bridge|building/, '🏰'],
+  [/anime|manga|studio|ghibli|miyazaki|naruto|goku|dragon ball|one piece|bleach|evangelion|cowboy bebop|jojo|sailor moon|spy|vinland/, '🎌'],
+];
+const SNAP_CAT = { retro: '🕹️', modern: '🎮', history: '📼', anime: '🎌', nerd: '🤓' };
+function questionSnap(q, cat, fallback) {
+  const text = String(q || '').toLowerCase();
+  for (const [re, emo] of SNAP_KEYWORDS) if (re.test(text)) return emo;
+  return SNAP_CAT[cat] || fallback || '❓';
+}
+function polaroid(q, cat, caption, fallback) {
+  return `<div class="polaroid pop"><div class="snap">${questionSnap(q, cat, fallback)}</div>` +
+    `<div class="snapcap marker">${esc(caption || 'EXHIBIT')}</div></div>`;
+}
 
 function foamBurst() {
   for (let i = 0; i < 40; i++) {
@@ -216,7 +196,6 @@ function render(st) {
   for (const p of st.players) playerAvatars[p.name] = p.avatar;
 
   roomcodeEl.innerHTML = `<small>JOIN AT ${location.hostname}:${location.port || 80}/play — CODE</small>${st.code}`;
-  bubble.textContent = st.bartender || '';
   timerEndsAt = st.timerEndsAt;
 
   // players bar
@@ -224,7 +203,7 @@ function render(st) {
   playersbar.innerHTML = st.players.map(p => {
     const dead = inMurder && st.game.players && st.game.players.some(gp => gp.name === p.name && !gp.alive);
     return `<div class="pchip ${p.connected ? '' : 'gone'} ${dead ? 'deadp' : ''}">
-      ${dead ? '<span class="skull">💀</span>' : ''}${Avatars.render(p.avatar, 54)}
+      ${dead ? '<span class="skull">💀</span>' : ''}${Avatars.render(p.avatar, 42)}
       <span class="pname">${p.vip ? '👑' : ''}${esc(p.name)}</span>
       <span class="pscore">${p.score}</span></div>`;
   }).join('');
@@ -324,15 +303,21 @@ const GAME_VIEWS = {
 
   'tt-write': (g) => {
     stage.innerHTML = `
-      <div class="poster tilt-l" style="max-width:75%"><h3 class="marker" style="margin:0;color:var(--blood)">${esc(g.round)}</h3>
-        <div class="bigprompt display" style="color:var(--ink)">${esc(g.prompt)}</div></div>
+      <div class="qrow">
+        ${polaroid(g.prompt, null, 'THE TALE', '📜')}
+        <div class="poster" style="flex:1"><h3 class="marker" style="margin:0 0 6px;color:var(--blood)">${esc(g.round)}</h3>
+          <div class="bigprompt display" style="color:var(--ink)">${esc(g.prompt)}</div></div>
+      </div>
       <p class="marker" style="font-size:1.3rem">Everyone: type a LIE on your phone!</p>
       ${headRow(g.submitted)}`;
   },
 
   'tt-vote': (g) => {
     stage.innerHTML = `
-      <div class="poster tilt-r" style="max-width:75%"><div class="bigprompt display" style="font-size:1.6rem;color:var(--ink)">${esc(g.prompt)}</div></div>
+      <div class="qrow">
+        ${polaroid(g.prompt, null, 'THE TALE', '📜')}
+        <div class="poster" style="flex:1"><div class="bigprompt display" style="font-size:1.5rem;color:var(--ink)">${esc(g.prompt)}</div></div>
+      </div>
       <div class="answer-grid">${g.options.map((o, i) =>
         `<div class="answer-card poster pop" style="animation-delay:${i * 0.1}s"><span class="letter">${String.fromCharCode(65 + i)}</span>${esc(o.text)}</div>`).join('')}
       </div>
@@ -367,7 +352,10 @@ const GAME_VIEWS = {
   'mp-question': (g) => {
     stage.innerHTML = `
       <p class="marker" style="font-size:1.3rem;margin:0">Question ${g.qNum} of ${g.qTotal} — answer or DIE</p>
-      <div class="poster tilt-l" style="max-width:80%"><div class="bigprompt display" style="color:var(--ink)">${esc(g.q)}</div></div>
+      <div class="qrow">
+        ${polaroid(g.q, g.cat, 'THE CASE')}
+        <div class="poster" style="flex:1"><div class="bigprompt display" style="color:var(--ink)">${esc(g.q)}</div></div>
+      </div>
       <div class="answer-grid">${g.choices.map((c, i) =>
         `<div class="answer-card poster"><span class="letter">${String.fromCharCode(65 + i)}</span>${esc(c)}</div>`).join('')}
       </div>
@@ -376,7 +364,10 @@ const GAME_VIEWS = {
 
   'mp-result': (g) => {
     stage.innerHTML = `
-      <div class="poster tilt-r" style="max-width:80%"><div class="bigprompt display" style="font-size:1.6rem;color:var(--ink)">${esc(g.q)}</div></div>
+      <div class="qrow">
+        ${polaroid(g.q, g.cat, 'SOLVED')}
+        <div class="poster" style="flex:1"><div class="bigprompt display" style="font-size:1.5rem;color:var(--ink)">${esc(g.q)}</div></div>
+      </div>
       <div class="answer-grid">${g.choices.map((c, i) =>
         `<div class="answer-card poster ${i === g.correct ? 'correct pop' : 'wrongpick'}"><span class="letter">${String.fromCharCode(65 + i)}</span>${esc(c)}</div>`).join('')}
       </div>
@@ -489,8 +480,11 @@ const GAME_VIEWS = {
   'dd-throw': (g) => {
     stage.innerHTML = `
       <p class="marker" style="margin:0;font-size:1.2rem">DART ${g.round} of ${g.roundTotal}</p>
-      <div class="poster tilt-r" style="max-width:78%"><div class="bigprompt display" style="color:var(--ink)">${esc(g.q)}</div>
-      <p class="marker" style="color:var(--blood);margin:4px 0 0">Answer in: ${esc(g.unit)} — beware the hidden GUTTER!</p></div>
+      <div class="qrow">
+        ${polaroid(g.q, null, 'THE ODDS', '🎯')}
+        <div class="poster" style="flex:1"><div class="bigprompt display" style="color:var(--ink)">${esc(g.q)}</div>
+        <p class="marker" style="color:var(--blood);margin:4px 0 0">Answer in: ${esc(g.unit)} — beware the hidden GUTTER!</p></div>
+      </div>
       <div class="numline"><span class="endlab" style="left:0">${g.min}</span><span class="endlab" style="right:0">${g.max}</span></div>
       ${headRow(g.thrown)}`;
   },

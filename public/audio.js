@@ -40,7 +40,7 @@
   }
 
   const SFX = {
-    tick() { tone(880, 0.06, { type: 'square', vol: 0.08 }); },
+    tick() { tone(760, 0.05, { type: 'triangle', vol: 0.05 }); },
     stinger() { [523, 659, 784].forEach((f, i) => tone(f, 0.18, { type: 'sawtooth', vol: 0.12, delay: i * 0.09 })); },
     bell() { tone(1318, 0.5, { type: 'triangle', vol: 0.18 }); tone(1975, 0.35, { type: 'sine', vol: 0.08 }); },
     thunk() { tone(140, 0.15, { type: 'sine', vol: 0.35, slide: -80 }); noise(0.08, { vol: 0.15, freq: 2500 }); },
@@ -50,7 +50,9 @@
     death() { [196, 155, 98].forEach((f, i) => tone(f, 0.5, { type: 'sawtooth', vol: 0.16, delay: i * 0.22 })); noise(0.6, { vol: 0.08, freq: 200, delay: 0.6 }); },
     doom() { tone(55, 1.6, { type: 'sawtooth', vol: 0.22 }); tone(58, 1.6, { type: 'sawtooth', vol: 0.18 }); },
     foam() { [523, 659, 784, 1046, 1318].forEach((f, i) => tone(f, 0.16, { type: 'triangle', vol: 0.14, delay: i * 0.07 })); noise(0.5, { vol: 0.12, freq: 4000, q: 0.4, delay: 0.15 }); },
-    urgent() { tone(1200, 0.08, { type: 'square', vol: 0.12 }); tone(600, 0.08, { type: 'square', vol: 0.1, delay: 0.05 }); },
+    // soft warm woodblock tick — gentle countdown, not a shrill beep
+    urgent() { tone(560, 0.09, { type: 'triangle', vol: 0.05 }); },
+    urgentLast() { tone(760, 0.14, { type: 'triangle', vol: 0.07 }); },
   };
 
   global.PubAudio = {

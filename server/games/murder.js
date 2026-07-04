@@ -37,14 +37,16 @@ class TriviaMurderPub extends GameBase {
 
   start() {
     this.phase = 'intro';
-    this.room.bartender('roundStart');
     this.room.setTimer(secs(7), () => this.askQuestion());
     this.room.sync();
   }
 
   askQuestion() {
     if (this.qIndex >= QUESTIONS) return this.startFinale();
-    this.q = this.questions[this.qIndex];
+    // Shuffle the choice order each time so the correct answer isn't positionally predictable
+    const raw = this.questions[this.qIndex];
+    const order = shuffle(raw.choices.map((c, i) => ({ c, i })));
+    this.q = { q: raw.q, cat: raw.cat, choices: order.map(o => o.c), answer: order.findIndex(o => o.i === raw.answer) };
     this.answers = {};
     this.phase = 'question';
     this.room.sfx('stinger');
@@ -79,7 +81,7 @@ class TriviaMurderPub extends GameBase {
     this.room.setTimer(secs(5), () => {
       this.qIndex++;
       if (this.losers.length > 0) this.startPunishment();
-      else { this.room.bartender('playerDid'); this.askQuestion(); }
+      else this.askQuestion();
     });
     this.room.sync();
   }
@@ -165,8 +167,7 @@ class TriviaMurderPub extends GameBase {
     for (const n of this.deaths) this.alive.delete(n);
     for (const n of L) if (!this.deaths.includes(n)) this.addPoints(n, SURVIVE_PTS);
     if (this.deaths.length) {
-      this.room.sfx('death'); this.room.fx('shake'); this.room.bartender('death');
-      this.room.roast('death', this.deaths[Math.floor(Math.random() * this.deaths.length)]);
+      this.room.sfx('death'); this.room.fx('shake');
     } else this.room.sfx('foam');
     this.room.setTimer(secs(6), () => this.askQuestion());
     this.room.sync();
@@ -180,7 +181,6 @@ class TriviaMurderPub extends GameBase {
     this.finaleQ = 0;
     this.escaped = null;
     this.room.sfx('doom');
-    this.room.bartender('roundStart');
     this.room.setTimer(secs(7), () => this.finaleQuestion());
     this.room.sync();
   }
@@ -217,8 +217,6 @@ class TriviaMurderPub extends GameBase {
       this.phase = 'finale-end';
       this.room.sfx('foam');
       this.room.fx('confetti');
-      this.room.bartender('victory');
-      this.room.roast('escape', this.escaped);
       this.room.setTimer(secs(8), () => this.finish());
     } else {
       this.finaleQ++;
@@ -286,11 +284,11 @@ class TriviaMurderPub extends GameBase {
     }
     if (this.phase === 'question') {
       return { ...base, type: 'mp-question', qNum: this.qIndex + 1, qTotal: QUESTIONS,
-        q: this.q.q, choices: this.q.choices,
+        q: this.q.q, cat: this.q.cat, choices: this.q.choices,
         answered: this.players.map(p => ({ name: p.name, done: this.answers[p.name] !== undefined })) };
     }
     if (this.phase === 'qresult') {
-      return { ...base, type: 'mp-result', q: this.q.q, choices: this.q.choices, correct: this.q.answer,
+      return { ...base, type: 'mp-result', q: this.q.q, cat: this.q.cat, choices: this.q.choices, correct: this.q.answer,
         results: this.players.map(p => ({ name: p.name, pick: this.answers[p.name],
           right: this.answers[p.name] === this.q.answer, alive: this.isAlive(p.name) })),
         losers: this.losers };

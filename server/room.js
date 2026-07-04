@@ -1,7 +1,5 @@
 'use strict';
 const { shuffle, pick, makeCode, secs } = require('./util');
-const BARTENDER = require('./content/bartender.json');
-const ROASTS = require('./content/roasts.json');
 
 const TallTales = require('./games/talltales');
 const TriviaMurderPub = require('./games/murder');
@@ -35,7 +33,6 @@ class Room {
     this.currentGame = null;
     this.timerEndsAt = null;
     this._timeout = null;
-    this.bartenderLine = pick(BARTENDER.general);
     this._sfx = { seq: 0, name: null };
     this._fx = { seq: 0, name: null };
     this._toast = { seq: 0, text: null };
@@ -73,7 +70,6 @@ class Room {
     };
     this.players.set(player.key, player);
     this.sfx('bell');
-    this.roast('join', player.name);
     this.sync();
     return { player };
   }
@@ -107,22 +103,6 @@ class Room {
   sfx(name) { this._sfx = { seq: this._sfx.seq + 1, name }; }
   fx(name) { this._fx = { seq: this._fx.seq + 1, name }; }
   toast(text) { this._toast = { seq: this._toast.seq + 1, text }; }
-  bartender(category) { this.bartenderLine = pick(BARTENDER[category] || BARTENDER.general); }
-
-  // ---------- MC voice (spoken by the host screen via speech synthesis) ----------
-  say(text) {
-    if (!text) return;
-    const h = this.io.sockets.sockets.get(this.hostSocketId);
-    if (h) h.emit('say', { text });
-  }
-
-  // Pick a roast line from a category and fill in {p} (target) / {q} (second player)
-  roast(category, p, q) {
-    const lines = ROASTS[category];
-    if (!lines || !lines.length) return;
-    const line = pick(lines).split('{p}').join(p || 'someone').split('{q}').join(q || 'someone');
-    this.say(line);
-  }
 
   // ---------- Pub Justice (punish mechanic) ----------
   // Games call this when someone performs really well (streaks, knockouts, bullseyes).
@@ -133,7 +113,6 @@ class Room {
     this.pendingPunish[key] = true;
     this.toast(`⚖️ PUB JUSTICE: ${p.name} earned a punishment! Check your phone…`);
     this.sfx('bell');
-    this.roast('justice', p.name);
   }
 
   applyPunish(punisher, data) {
@@ -151,7 +130,6 @@ class Room {
     this.toast(`🍻 ${punisher.name}${data.random ? ' rolled the dice and' : ''} drenched ${target.name}! -${PUNISH_PTS}`);
     this.sfx('splash');
     this.fx('shake');
-    this.roast('drench', target.name, punisher.name);
     this.sync();
   }
 
@@ -190,7 +168,6 @@ class Room {
     if (this.scene === 'lobby' && data.action === 'toLobbyMenu') {
       if (this.players.size < MIN_PLAYERS) return;
       this.scene = 'menu';
-      this.bartender('general');
       this.sfx('stinger');
       this.sync();
     } else if (this.scene === 'menu') {
@@ -209,7 +186,6 @@ class Room {
     } else if (this.scene === 'final' && data.action === 'again') {
       for (const p of this.players.values()) p.score = 0;
       this.scene = 'menu';
-      this.bartender('general');
       this.sync();
     }
   }
@@ -226,7 +202,6 @@ class Room {
     this.scene = 'game';
     this.currentGame = new GAMES[id].cls(this);
     this.sfx('stinger');
-    this.roast('intro_' + id);
     this.currentGame.start();
   }
 
@@ -238,18 +213,13 @@ class Room {
     }
     this.currentGame = null;
     this.queueIndex++;
-    const ranked = this.playerList().slice().sort((a, b) => b.score - a.score);
     if (this.queueIndex >= this.queue.length) {
       this.scene = 'final';
-      this.bartender('victory');
       this.fx('confetti');
       this.sfx('foam');
-      if (ranked[0]) this.roast('victory', ranked[0].name);
     } else {
       this.scene = 'bartab';
-      this.bartender('scores');
       this.sfx('bell');
-      if (ranked.length > 1) this.roast('scores', ranked[ranked.length - 1].name);
     }
     this.clearTimer();
     this.sync();
@@ -265,7 +235,6 @@ class Room {
       scene: this.scene,
       code: this.code,
       timerEndsAt: this.timerEndsAt,
-      bartender: this.bartenderLine,
       sfx: this._sfx,
       fx: this._fx,
       toast: this._toast,

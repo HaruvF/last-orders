@@ -6,7 +6,7 @@
 //   room.clearTimer()
 //   room.sync()                 — push fresh state to host + players
 //   room.sfx(name) / room.fx(name)
-//   room.bartender(category)    — set the MC line shown on the host
+//   room.toast(text)            — flash a banner on the host screen
 //   room.gameFinished()         — hand control back to the room
 // Subclasses implement: start(), onInput(player, data), hostView(), playerView(player)
 

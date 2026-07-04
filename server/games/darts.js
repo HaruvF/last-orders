@@ -23,7 +23,6 @@ class DartsOfDestiny extends GameBase {
 
   start() {
     this.phase = 'intro';
-    this.room.bartender('roundStart');
     this.room.setTimer(secs(7), () => this.startThrow());
     this.room.sync();
   }
@@ -95,10 +94,6 @@ class DartsOfDestiny extends GameBase {
     for (const p of this.players) if (this.scores[p.name] < 0) this.scores[p.name] = 0;
     this.room.sfx(this.winners.length ? 'foam' : 'wrong');
     this.room.fx('shake');
-    // MC commentary: mock a gutter victim, or crown the sharpshooter
-    const gutterFolk = Object.entries(this.results).filter(([, r]) => r.gutter).map(([n]) => n);
-    if (gutterFolk.length) this.room.roast('gutter', gutterFolk[Math.floor(Math.random() * gutterFolk.length)]);
-    else if (this.winners.length && Math.random() < 0.7) this.room.roast('bullseye', this.winners[0]);
     this.room.setTimer(secs(10), () => { this.round++; this.nextOrEnd(); });
     this.room.sync();
   }
@@ -106,7 +101,6 @@ class DartsOfDestiny extends GameBase {
   nextOrEnd() {
     if (this.round >= ROUNDS) {
       this.phase = 'standings';
-      this.room.bartender('scores');
       this.room.sfx('stinger');
       this.room.setTimer(secs(8), () => this.finish());
       this.room.sync();
