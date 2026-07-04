@@ -7,34 +7,137 @@
 <link rel="stylesheet" href="/shared.css">
 <style>
   html, body { height: 100%; }
-  #land {
-    min-height: 100vh;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 20px;
+  body { overflow: auto; }
+
+  #ambient { position: fixed; inset: 0; overflow: hidden; pointer-events: none; z-index: 0; }
+  .amb {
+    position: absolute; bottom: -80px; opacity: 0;
+    animation: amb-rise linear infinite;
+    filter: saturate(0.7);
   }
+  @keyframes amb-rise {
+    0% { transform: translateY(0) translateX(0) rotate(-12deg); opacity: 0; }
+    8% { opacity: var(--amb-op, 0.14); }
+    50% { transform: translateY(-55vh) translateX(50px) rotate(14deg); }
+    92% { opacity: var(--amb-op, 0.14); }
+    100% { transform: translateY(-118vh) translateX(-30px) rotate(-12deg); opacity: 0; }
+  }
+  #vignette { position: fixed; inset: 0; pointer-events: none; z-index: 2;
+    box-shadow: inset 0 0 140px 20px rgba(200, 127, 47, 0.14); }
+
+  #land {
+    position: relative; z-index: 1;
+    min-height: 100vh;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    gap: 22px; padding: 40px 18px;
+    border-top: 18px solid var(--wood);
+    border-bottom: 18px solid var(--wood);
+    box-shadow: inset 0 6px 0 var(--ink), inset 0 -6px 0 var(--ink);
+  }
+
+  .bigsign { font-size: clamp(2.6rem, 11vw, 5.5rem); line-height: 1; }
+  .bigsign .beer { font-size: 0.6em; }
+
   .landcard { max-width: 560px; width: 100%; text-align: center; }
-  .landcard h1 { font-size: clamp(2.2rem, 9vw, 4rem); margin: 6px 0; }
-  .landcard p { font-size: 1.2rem; }
-  .landbtns { display: flex; flex-direction: column; gap: 16px; margin-top: 24px; }
+  .landcard p { font-size: clamp(1rem, 3vw, 1.25rem); margin: 4px 0; }
+
+  .landbtns { display: flex; flex-direction: column; gap: 16px; margin-top: 22px; }
   .landbtns a { text-decoration: none; }
-  .landbtns .btn { width: 100%; font-size: 1.4rem; padding: 20px; display: block; }
-  .hint { font-size: 0.95rem; opacity: 0.85; margin-top: 8px; }
+  .landbtns .btn { width: 100%; font-size: clamp(1.1rem, 3.5vw, 1.4rem); padding: 20px; display: block; }
+  .hint { font-size: 0.9rem; opacity: 0.85; margin-top: 6px; }
+
+  /* the landlord greets you at the door */
+  .greeter { display: flex; align-items: flex-end; gap: 12px; max-width: 620px; width: 100%; justify-content: center; }
+  #barkeep svg { display: block; overflow: visible; }
+  #barkeep .bk-body { transform-box: fill-box; transform-origin: 50% 95%; animation: bk-idle 4.2s ease-in-out infinite; }
+  @keyframes bk-idle { 0%,100% { transform: rotate(0deg) translateY(0); } 50% { transform: rotate(-1.4deg) translateY(-2px); } }
+  #barkeep .bk-head { transform-box: fill-box; transform-origin: 50% 90%; animation: bk-head-idle 4.2s ease-in-out infinite; }
+  @keyframes bk-head-idle { 0%,100% { transform: rotate(0deg); } 55% { transform: rotate(2deg); } }
+  #barkeep .bk-mug { transform-box: fill-box; transform-origin: 20% 80%; animation: bk-mug-idle 4.2s ease-in-out infinite; }
+  @keyframes bk-mug-idle { 0%,100% { transform: rotate(0deg); } 50% { transform: rotate(-4deg) translateY(-1px); } }
+
+  #bubble {
+    position: relative; max-width: 300px;
+    font-size: clamp(0.9rem, 2.6vw, 1.15rem);
+    padding: 10px 16px;
+  }
+  #bubble::after {
+    content: ''; position: absolute; left: -14px; bottom: 16px;
+    border: 10px solid transparent; border-right-color: var(--ink);
+  }
 </style>
 </head>
 <body>
+  <div id="ambient"></div>
+  <div id="vignette"></div>
   <div id="land">
-    <div class="poster wanted landcard tilt-l">
-      <div class="neon" style="font-size:1.4rem">🍺</div>
-      <h1>LAST ORDERS</h1>
-      <p class="marker" style="color:var(--ink)">A pub full of liars, ghosts and darts.</p>
+    <div class="bigsign neon marker"><span class="beer">🍺</span> LAST ORDERS</div>
+
+    <div class="greeter">
+      <div id="barkeep">
+        <svg width="150" height="150" viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
+          <ellipse cx="60" cy="112" rx="44" ry="8" fill="#0d0805"/>
+          <g class="bk-body">
+            <rect x="30" y="62" width="60" height="44" rx="8" fill="#5a3d2b" stroke="#1a120c" stroke-width="5"/>
+            <rect x="44" y="66" width="32" height="40" fill="#e9d9ae" stroke="#1a120c" stroke-width="4"/>
+            <g class="bk-head">
+              <circle cx="60" cy="40" r="24" fill="#e8bfa0" stroke="#1a120c" stroke-width="5"/>
+              <path d="M38 34 Q60 16 82 34 L82 28 Q60 10 38 28 Z" fill="#3d3d3d" stroke="#1a120c" stroke-width="4"/>
+              <circle cx="51" cy="40" r="3.5" fill="#1a120c"/><circle cx="69" cy="40" r="3.5" fill="#1a120c"/>
+              <path class="bk-brow" d="M46 36 L56 33" stroke="#1a120c" stroke-width="4" stroke-linecap="round"/>
+              <path class="bk-brow" d="M74 36 L64 33" stroke="#1a120c" stroke-width="4" stroke-linecap="round"/>
+              <ellipse class="bk-mouth" cx="60" cy="54" rx="10" ry="3" fill="#1a120c"/>
+              <path d="M40 58 Q60 70 80 58 L78 66 Q60 76 42 66 Z" fill="#8a6f4d" stroke="#1a120c" stroke-width="4"/>
+            </g>
+            <g class="bk-mug">
+              <rect x="88" y="70" width="14" height="20" rx="3" fill="#f5a623" stroke="#1a120c" stroke-width="4"/>
+              <rect x="88" y="66" width="14" height="6" fill="#fffbe8" stroke="#1a120c" stroke-width="3"/>
+            </g>
+          </g>
+        </svg>
+      </div>
+      <div id="bubble" class="poster tilt-l marker"></div>
+    </div>
+
+    <div class="poster wanted landcard tilt-r">
+      <p class="marker" style="color:var(--ink);font-size:1.3rem">A pub full of liars, ghosts and darts.</p>
       <div class="landbtns">
         <a href="/host"><span class="btn brew">📺 BIG SCREEN — start a room</span></a>
         <a href="/play"><span class="btn">📱 JOIN ON YOUR PHONE</span></a>
       </div>
-      <p class="hint marker" style="color:var(--ink)">Open the big screen on a TV/laptop, then everyone joins with their phones using the room code.</p>
+      <p class="hint marker" style="color:var(--ink)">Open the big screen on a TV or laptop, then everyone joins from their phones with the room code.</p>
     </div>
   </div>
+
+  <script>
+    // Floating pub ambience (matches the in-game "pub" theme)
+    (function () {
+      var bits = ['🍺', '🫧', '🫧', '🍂'];
+      var box = document.getElementById('ambient');
+      for (var i = 0; i < 16; i++) {
+        var s = document.createElement('span');
+        s.className = 'amb';
+        s.textContent = bits[i % bits.length];
+        var dur = 14 + Math.random() * 18;
+        s.style.left = (Math.random() * 100) + 'vw';
+        s.style.fontSize = (18 + Math.random() * 42) + 'px';
+        s.style.animationDuration = dur + 's';
+        s.style.animationDelay = (-Math.random() * dur) + 's';
+        s.style.setProperty('--amb-op', (0.10 + Math.random() * 0.10).toFixed(3));
+        box.appendChild(s);
+      }
+      // A grumpy one-liner from the landlord
+      var lines = [
+        "Welcome to Last Orders. The floor's sticky and so am I. Pick a screen.",
+        "Oi. Big screen on the telly, phones for the rest of you. Chop chop.",
+        "You lot look thirsty and dangerously competitive. Perfect.",
+        "Start a room on the big screen, then wave your phones about like you mean it.",
+        "We don't do cocktails. We do consequences. Enjoy.",
+        "Grab a stool. Mind the one at the end — it's haunted and it bites."
+      ];
+      document.getElementById('bubble').textContent = lines[Math.floor(Math.random() * lines.length)];
+    })();
+  </script>
 </body>
 </html>
